@@ -1,3 +1,5 @@
+import { isNotNumber } from "./utils";
+
 interface ExerciseValues {
     target: number,
     exerciseData: number[]
@@ -22,11 +24,11 @@ const parseExerciseArguments = (args: string[]): ExerciseValues => {
         exerciseData.push(Number(args[argsCount]));
         argsCount++;
     }
-    if (isNaN(Number(args[2]))) throw new Error('Provided values were not numbers!');
+    if (isNotNumber(args[2])) throw new Error('Provided values were not numbers!');
     if (Number(args[2]) === 0) throw new Error('Division by zero');
 
     exerciseData.map(day => {
-        if (isNaN(Number(day))) throw new Error('Provided values were not numbers!');
+        if (isNotNumber(day)) throw new Error('Provided values were not numbers!');
     })
     return {
         target: Number(args[2]),

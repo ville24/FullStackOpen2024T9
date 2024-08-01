@@ -1,26 +1,31 @@
 import { isNotNumber } from "./utils";
 
 interface BmiValues {
-    value1: number;
-    value2: number;
+    weight: number;
+    height: number;
+}
+interface BmiResult {
+    weight: number;
+    height: number;
+    bmi: string;
 }
   
-const parseArguments = (args: string[]): BmiValues => {
-    if (args.length < 4) throw new Error('Not enough arguments');
-    if (args.length > 4) throw new Error('Too many arguments');
+const parseArguments = (params: BmiValues): BmiValues => {
+    if (!params.height) throw new Error('Parameter height missing');
+    if (!params.weight) throw new Error('Parameter weight missing');
 
-    if (!isNotNumber(args[2]) && !isNotNumber(args[3])) {
-        if (Number(args[2]) === 0) throw new Error('Division by zero')
+    if (!isNotNumber(params.height) && !isNotNumber(params.weight)) {
+        if (Number(params.height) === 0) throw new Error('Division by zero')
         return {
-            value1: Number(args[2]),
-            value2: Number(args[3])
+            weight: Number(params.weight),
+            height: Number(params.height)
         }
     } else {
-        throw new Error('Provided values were not numbers!');
+        throw new Error('malformatted parameters');
     }
 }
   
-const calculateBmi = (height: number, weight: number): string => {
+const calculateBmi = (weight: number, height: number): string => {
     const bmi: number = weight / Math.pow(height/100, 2);
 
     switch (true) {
@@ -57,13 +62,21 @@ const calculateBmi = (height: number, weight: number): string => {
     }
 }
 
-try {
-    const { value1, value2 } = parseArguments(process.argv);
-    console.log(calculateBmi(value1, value2));
-} catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
-    if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message;
+export const calcBmi = (params: BmiValues): BmiResult | unknown => {
+    try {
+        const { weight, height } = parseArguments(params);
+        return {
+            weight: weight,
+            height: height,
+            bmi: calculateBmi(weight, height)
+        };
+    } catch (error: unknown) {
+        let errorMessage
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        return { error: errorMessage };
     }
-    console.log(errorMessage);
 }
+
+export default calculateBmi

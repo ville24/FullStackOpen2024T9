@@ -19,7 +19,7 @@ const parseExerciseArguments = (args: string[]): ExerciseValues => {
     if (args.length < 4) throw new Error('Not enough arguments');
 
     let argsCount = 3;
-    let exerciseData: number[] = [];
+    const exerciseData: number[] = [];
     while (args[argsCount]) {
         exerciseData.push(Number(args[argsCount]));
         argsCount++;
@@ -29,12 +29,12 @@ const parseExerciseArguments = (args: string[]): ExerciseValues => {
 
     exerciseData.map(day => {
         if (isNotNumber(day)) throw new Error('Provided values were not numbers!');
-    })
+    });
     return {
         target: Number(args[2]),
         exerciseData: exerciseData
-    }
-}
+    };
+};
 
 const calculateExercises = (target: number, data: number[]): Result => {
     const ratingRatio: number = Math.round((data.reduce((a, b) => a + b, 0) / data.length) / target);
@@ -59,14 +59,14 @@ const calculateExercises = (target: number, data: number[]): Result => {
         ratingDescription: ratingDescription[rating-1],
         target: target,
         average: data.reduce((a, b) => a + b, 0) / data.length
-    }
-}
+    };
+};
 
 try {
     const { target, exerciseData } = parseExerciseArguments(process.argv);
     console.log(calculateExercises(target, exerciseData));
 } catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
         errorMessage += ' Error: ' + error.message;
     }

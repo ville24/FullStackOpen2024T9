@@ -9,21 +9,25 @@ interface BmiResult {
     height: number;
     bmi: string;
 }
+
+interface Error {
+    error: string;
+}
   
 const parseArguments = (params: BmiValues): BmiValues => {
     if (!params.height) throw new Error('Parameter height missing');
     if (!params.weight) throw new Error('Parameter weight missing');
 
     if (!isNotNumber(params.height) && !isNotNumber(params.weight)) {
-        if (Number(params.height) === 0) throw new Error('Division by zero')
+        if (Number(params.height) === 0) throw new Error('Division by zero');
         return {
             weight: Number(params.weight),
             height: Number(params.height)
-        }
+        };
     } else {
         throw new Error('malformatted parameters');
     }
-}
+};
   
 const calculateBmi = (weight: number, height: number): string => {
     const bmi: number = weight / Math.pow(height/100, 2);
@@ -60,9 +64,9 @@ const calculateBmi = (weight: number, height: number): string => {
         default:
             return 'Obese (Class III) ';
     }
-}
+};
 
-export const calcBmi = (params: BmiValues): BmiResult | unknown => {
+export const calcBmi = (params: BmiValues): BmiResult | Error => {
     try {
         const { weight, height } = parseArguments(params);
         return {
@@ -71,12 +75,12 @@ export const calcBmi = (params: BmiValues): BmiResult | unknown => {
             bmi: calculateBmi(weight, height)
         };
     } catch (error: unknown) {
-        let errorMessage
+        let errorMessage = '';
         if (error instanceof Error) {
             errorMessage = error.message;
         }
         return { error: errorMessage };
     }
-}
+};
 
-export default calculateBmi
+export default calculateBmi;

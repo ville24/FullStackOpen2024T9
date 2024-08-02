@@ -2,7 +2,7 @@ import { isNotNumber } from "./utils";
 
 interface ExerciseValues {
     target: number,
-    exerciseData: number[]
+    daily_exercises: number[]
 }
 
 interface Result {
@@ -15,29 +15,32 @@ interface Result {
     average: number
 }
 
-const parseExerciseArguments = (args: string[]): ExerciseValues => {
-    if (args.length < 4) throw new Error('Not enough arguments');
+interface Error {
+    error: string;
+}
 
-    let argsCount = 3;
+const parseExerciseData = (data: ExerciseValues): ExerciseValues => {
+    if (!data.target) throw new Error('parameters missing');
+    if (!data.daily_exercises) throw new Error('parameters missing');
+
+    if (isNotNumber(data.target) || Number(data.target) === 0) throw new Error('malformatted parameters');
+
+    let count: number = 0;
     const exerciseData: number[] = [];
-    while (args[argsCount]) {
-        exerciseData.push(Number(args[argsCount]));
-        argsCount++;
+    while (data.daily_exercises[count] !== undefined) {
+        if (isNotNumber(data.daily_exercises[count])) throw new Error('malformatted parameters');
+        exerciseData.push(Number(data.daily_exercises[count]));
+        count++;
     }
-    if (isNotNumber(args[2])) throw new Error('Provided values were not numbers!');
-    if (Number(args[2]) === 0) throw new Error('Division by zero');
 
-    exerciseData.map(day => {
-        if (isNotNumber(day)) throw new Error('Provided values were not numbers!');
-    });
     return {
-        target: Number(args[2]),
-        exerciseData: exerciseData
+        "daily_exercises": exerciseData,
+        "target": Number(data.target)
     };
 };
 
-const calculateExercises = (target: number, data: number[]): Result => {
-    const ratingRatio: number = Math.round((data.reduce((a, b) => a + b, 0) / data.length) / target);
+const calculateExercises = (data: ExerciseValues): Result => {
+    const ratingRatio: number = Math.round((data.daily_exercises.reduce((a, b) => a + b, 0) / data.daily_exercises.length) / data.target);
     let rating: number;
     switch (true) {
         case ratingRatio < 0.5:
@@ -52,23 +55,25 @@ const calculateExercises = (target: number, data: number[]): Result => {
     }
     const ratingDescription: string[] = ['bad', 'not too bad but could be better', 'good'];
     return {
-        periodLength: data.length,
-        trainingDays: data.filter(day => day != 0).length,
-        success: (data.reduce((a, b) => a + b, 0) / data.length) > target,
+        periodLength: data.daily_exercises.length,
+        trainingDays: data.daily_exercises.filter(day => day != 0).length,
+        success: (data.daily_exercises.reduce((a, b) => a + b, 0) / data.daily_exercises.length) > data.target,
         rating: rating,
         ratingDescription: ratingDescription[rating-1],
-        target: target,
-        average: data.reduce((a, b) => a + b, 0) / data.length
+        target: data.target,
+        average: data.daily_exercises.reduce((a, b) => a + b, 0) / data.daily_exercises.length
     };
 };
-
-try {
-    const { target, exerciseData } = parseExerciseArguments(process.argv);
-    console.log(calculateExercises(target, exerciseData));
-} catch (error: unknown) {
-    let errorMessage = 'Something bad happened.';
-    if (error instanceof Error) {
-        errorMessage += ' Error: ' + error.message;
+export const calcExercises = (data: ExerciseValues): Result | Error => {
+    try {
+        return calculateExercises(parseExerciseData(data));
+    } catch (error: unknown) {
+        let errorMessage = '';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        return { error: errorMessage };
     }
-    console.log(errorMessage);
-}
+};
+
+export default calcExercises;

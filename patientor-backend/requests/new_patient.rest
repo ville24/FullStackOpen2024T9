@@ -1,0 +1,10 @@
+POST https://improved-palm-tree-556jgvjrq9ph7ppv-3000.app.github.dev/api/patients
+Content-Type: application/json
+
+{
+    "name":"Martin Riggs3",
+    "dateOfBirth":"1979-01-30",
+    "ssn": "test",
+    "gender":"male",
+    "occupation":"Cop"
+}

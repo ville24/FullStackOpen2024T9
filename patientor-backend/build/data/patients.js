@@ -1,6 +1,5 @@
-import {PatientEntry } from "../src/types";
-import toNewPatientEntry from "../src/utils";
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const data = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
@@ -43,12 +42,4 @@ const data = [
         "occupation": "Digital evangelist"
     }
 ];
-
-
-const patientEntries: PatientEntry [] = data.map(obj => {
-    const object = toNewPatientEntry(obj) as PatientEntry;
-    object.id = obj.id;
-    return object;
-});
-    
-export default patientEntries;
+exports.default = data;

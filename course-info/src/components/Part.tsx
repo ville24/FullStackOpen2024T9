@@ -37,6 +37,17 @@ const Part = (props: PartProps)  => {
         </p>
       );
 
+    case "special":
+      return (
+        <p>
+          <span style={{fontWeight: "bold"}}>{props.coursePart.name} {props.coursePart.exerciseCount}</span><br />
+          <span style={{fontStyle: "italic"}}>{props.coursePart.description}</span><br />
+          <span>{props.coursePart.requirements.map((req, index) => {
+            if (index) return (<span key={req}>, {req}</span>); else return (<span key={req}>{req}</span>);
+          })}</span><br />
+        </p>
+      );
+
     default:
       return assertNever(props.coursePart);
   }

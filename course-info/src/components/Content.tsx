@@ -1,15 +1,21 @@
+import Part from './Part';
+import { CoursePart } from '../types';
+
 interface contentProps {
-    courseParts: {
-        name: string,
-        exerciseCount: number
-    }[]
+    courseParts: CoursePart[]
 };
 
   
-const Total = (props: contentProps)  => 
-    props.courseParts.map(coursePart =>
-    <p key={coursePart.name}>
-        {coursePart.name} {coursePart.exerciseCount}
-    </p>);
-  
-export default Total;
+const Content = (props: contentProps)  => {
+    return (
+        <>
+            {
+                props.courseParts.map(coursePart => {
+                    return (<Part key={coursePart.name} coursePart={coursePart}></Part>);
+                })
+            }
+        </>
+)   ;
+};
+
+export default Content;

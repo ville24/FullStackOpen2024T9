@@ -24,28 +24,40 @@ const NewEntryForm = (props: formProps)   => {
         props.handleForm(newEntry)
     }
 
+    const visibilitySelected = (value: string) => {
+        setNewVisibility(value as DiaryEntry["visibility"])
+    }
+
+    const weatherSelected = (value: string) => {
+        setNewWeather(value as DiaryEntry["weather"])
+    }
+
     return (
         <form onSubmit={prepareSubmit}>
             Date
-            <input 
+            <input
+                type="date"
                 value={newDate}
                 onChange={(event) => 
                     setNewDate(event.target.value)}
             />
             <br />
             Visibility
-            <input 
-                value={newVisibility}
-                onChange={(event) => 
-                    setNewVisibility(event.target.value as DiaryEntry["visibility"])}
-            />
+            <div>
+                great <input type="radio" name="visibility" onChange={() => visibilitySelected('great')} /><br />
+                good <input type="radio" name="visibility" onChange={() => visibilitySelected('good')} /><br />
+                ok <input type="radio" name="visibility" onChange={() => visibilitySelected('ok')} /><br />
+                poor <input type="radio" name="visibility" onChange={() => visibilitySelected('poor')} /><br />
+            </div>
             <br />
             Weather
-            <input 
-                value={newWeather}
-                onChange={(event) => 
-                    setNewWeather(event.target.value as DiaryEntry["weather"])}
-            />
+            <div>
+                sunny <input type="radio" name="weather" onChange={() => weatherSelected('sunny')} /><br />
+                rainy <input type="radio" name="weather" onChange={() => weatherSelected('rainy')} /><br />
+                cloudy <input type="radio" name="weather" onChange={() => weatherSelected('cloudy')} /><br />
+                stormy <input type="radio" name="weather" onChange={() => weatherSelected('stormy')} /><br />
+                windy <input type="radio" name="weather" onChange={() => weatherSelected('windy')} /><br />
+            </div>
             <br />
             Comment
             <input 

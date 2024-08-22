@@ -12,10 +12,19 @@ router.get('/', (_req, res) => {
     res.send(patientsService.getNonSensitiveEntries());
 });
 
+router.get('/:id', (req, res) => {
+  const entry = patientsService.findById(req.params.id);
+  if (entry) {
+    res.send(entry);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
 router.post('/', (req, res) => {
   try {
-    const newPatientEntry = toNewPatientEntry(req.body);
-    const addedEntry = patientsService.addPatient(newPatientEntry);
+    const newPatient = toNewPatientEntry(req.body);
+    const addedEntry = patientsService.addPatient(newPatient);
     res.json(addedEntry);
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong.';

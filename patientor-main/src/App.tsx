@@ -8,9 +8,12 @@ import { Patient } from "./types";
 
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
+import PatientPage from "./components/PatientPage";
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  //const [patient, setPatient] = useState<Patient>();
+  //const [id, setId] = useState<string>()
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
@@ -21,7 +24,33 @@ const App = () => {
     };
     void fetchPatientList();
   }, []);
-  
+/*
+  //useEffect(() => {
+    const fetchPatient = async (id: string | undefined) => {
+      if (id) {
+        console.log('fetchPatient', id)
+        const p = await patientService.findById(id);
+        setPatient(p);
+      }
+    }
+  //  void fetchPatient(id);
+  //}, [id]);
+
+  console.log(useParams())
+  if (useParams().id) {
+    setId(useParams().id)
+  }
+
+  const PatientPage = () => {
+    const { id } = useParams();
+    console.log('iddd', id);
+    if (id) {
+      const p = patientService.findById(id);
+      console.log(p)
+    }
+    return null;
+  }
+*/
   return (
     <div className="App">
       <Router>
@@ -35,7 +64,7 @@ const App = () => {
           <Divider hidden />
           <Routes>
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
-            <Route path="/patients/:id" element={<div>uudelleen ohjaus</div>} />
+            <Route path="/patients/:id" element={<PatientPage  />} />
           </Routes>
         </Container>
       </Router>

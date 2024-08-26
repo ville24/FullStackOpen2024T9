@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody, Link } from '@mui/material';
+import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 import axios from 'axios';
 
 import { PatientFormValues, Patient } from "../../types";

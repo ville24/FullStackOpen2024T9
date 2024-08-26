@@ -15,6 +15,7 @@ router.get('/', (_req, res) => {
 router.get('/:id', (req, res) => {
   const entry = patientsService.findById(req.params.id);
   if (entry) {
+    console.log(entry)
     res.send(entry);
   } else {
     res.sendStatus(404);

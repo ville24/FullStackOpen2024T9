@@ -3,10 +3,12 @@ import { Male, Female, Transgender } from '@mui/icons-material';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import patientService from "../../services/patients";
-import { Patient } from "../../types";
+import diagnoseService from "../../services/diagnosis";
+import { Patient, Diagnosis } from "../../types";
 
 const PatientPage = () => {
     const [patient, setPatient] = useState<Patient>();
+    const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
     const { id } = useParams();
 
     useEffect(() => {
@@ -19,7 +21,21 @@ const PatientPage = () => {
         };
         
         fetchPatient(id);
+
+        const fetchDiagnosis = async (): Promise<Diagnosis | undefined> => {
+            const d = await diagnoseService.getAll();
+            setDiagnosis(d);
+            return undefined;
+        };
+        
+        fetchDiagnosis();
     }, [id]);
+
+    const getDiagnoseName = (code: string) => {
+        const codeEntry = diagnosis.find(d => d.code === code);
+        if (codeEntry) { return codeEntry.name; }
+        else { return ''; }
+    };
 
     if (!patient) {
         return (<></>);
@@ -36,6 +52,21 @@ const PatientPage = () => {
                 </h2>
                 <div>ssh: {patient.ssn}</div>
                 <div>occupation: {patient.occupation}</div>
+                <h3>entries</h3>
+                {
+                    patient.entries.map(entry => 
+                        <div key={entry.id}>
+                            <div>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></div>
+                            <ul>
+                                {
+                                    entry.diagnosisCodes && entry.diagnosisCodes.map(code =>
+                                        <li key={code}>{code} {getDiagnoseName(code)}</li>
+                                    )
+                                }
+                            </ul>
+                        </div>
+                    )
+                }
             </Box>
             </div>
         );

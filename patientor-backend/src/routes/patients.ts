@@ -9,13 +9,13 @@ app.use(express.json());
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-    res.send(patientsService.getNonSensitiveEntries());
+    res.send(patientsService.getEntries());
 });
 
 router.get('/:id', (req, res) => {
   const entry = patientsService.findById(req.params.id);
   if (entry) {
-    console.log(entry)
+    console.log(entry);
     res.send(entry);
   } else {
     res.sendStatus(404);

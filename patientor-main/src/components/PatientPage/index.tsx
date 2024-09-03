@@ -1,10 +1,12 @@
 import { Box } from '@mui/material';
-import { Male, Female, Transgender } from '@mui/icons-material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { Male, Female, Transgender, LocalHospital, MedicalInformation, OtherHouses, Favorite } from '@mui/icons-material';
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import patientService from "../../services/patients";
 import diagnoseService from "../../services/diagnosis";
-import { Patient, Diagnosis } from "../../types";
+import { Patient, Diagnosis, Entry } from "../../types";
 
 const PatientPage = () => {
     const [patient, setPatient] = useState<Patient>();
@@ -31,10 +33,110 @@ const PatientPage = () => {
         fetchDiagnosis();
     }, [id]);
 
+
     const getDiagnoseName = (code: string) => {
         const codeEntry = diagnosis.find(d => d.code === code);
         if (codeEntry) { return codeEntry.name; }
         else { return ''; }
+    };
+
+    const assertNever = (value: never): never => {
+        throw new Error(
+        `Unhandled discriminated union member: ${JSON.stringify(value)}`
+        );
+    };
+
+    const EntryDetails:React.FC<{ entry : Entry }> = ({ entry }) => {
+
+        const EntryDate = () =>
+            <span>{entry.date}</span>;
+
+        const EntryType = () =>
+            <span>
+                {entry.type === 'Hospital' && <LocalHospital />}
+                {entry.type === 'OccupationalHealthcare' && <OtherHouses />}
+                {entry.type === 'HealthCheck' && <MedicalInformation />}
+            </span>;
+
+        const EntryDescription = () =>
+            <div style={{fontStyle: 'italic'}}>{entry.description}</div> ;
+
+        const EntryDiagnosis = () =>
+            <ul>
+                {
+                    entry.diagnosisCodes && entry.diagnosisCodes.map(code =>
+                        <li key={code}>{code} {getDiagnoseName(code)}</li>
+                    )
+                }
+            </ul>;
+        
+        const EntryDischarge = () => 
+            <div>{entry.type === 'Hospital' && entry.discharge.date + ' ' + entry.discharge.criteria}</div>;
+
+        const Specialist = () =>
+            <div>Diagnose by {entry.specialist}</div>;
+            
+        const HealthCheckRating = () => {
+            if (entry.type==='HealthCheck') {
+                let healtCheckRatingStyle;
+                if (entry.healthCheckRating === 0) { healtCheckRatingStyle = {color: 'green'}; }
+                if (entry.healthCheckRating === 1) { healtCheckRatingStyle = {color: 'yellow'}; }
+                if (entry.healthCheckRating === 2) { healtCheckRatingStyle = {color: 'red'}; }
+                if (entry.healthCheckRating === 3) { healtCheckRatingStyle = {color: 'black'}; }
+            
+                return (
+                    <div>{entry.type==='HealthCheck' && <Favorite style={healtCheckRatingStyle} />}</div>
+                );
+            }
+        };
+
+        const Employer = () =>
+            <span>{entry.type === 'OccupationalHealthcare' && entry.employerName}</span>;
+
+        const SickLeave = () =>
+            <div>{entry.type === 'OccupationalHealthcare' && entry.sickLeave && 'Sick leave: ' + entry.sickLeave.startDate + ' - ' + entry.sickLeave.endDate}</div>;
+
+        const HospitalEntry = () => 
+            <div>
+                <div><EntryDate /> <EntryType /></div>
+                <EntryDescription />                                
+                <EntryDiagnosis />
+                <EntryDischarge />
+                <Specialist />
+            </div>;
+
+        const OccupationalHealthcare = () => 
+            <div>
+                <div><EntryDate /> <EntryType /><Employer /></div>
+                <EntryDescription />                                
+                <EntryDiagnosis />
+                <SickLeave />
+                <Specialist />
+            </div>;
+
+        const HealthCheck = () => 
+            <div>
+                <div><EntryDate /> <EntryType /></div>
+                <EntryDescription />                                
+                <EntryDiagnosis />
+                <HealthCheckRating />
+                <Specialist />
+            </div>;
+
+
+        switch (entry.type) {
+            case "Hospital":
+                return <HospitalEntry />;
+            
+            case "OccupationalHealthcare":
+                return <OccupationalHealthcare />;
+            
+            case "HealthCheck":
+                return <HealthCheck />;
+
+            default:
+                assertNever(entry as never);
+        }
     };
 
     if (!patient) {
@@ -54,17 +156,12 @@ const PatientPage = () => {
                 <div>occupation: {patient.occupation}</div>
                 <h3>entries</h3>
                 {
-                    patient.entries.map(entry => 
-                        <div key={entry.id}>
-                            <div>{entry.date} <span style={{fontStyle: 'italic'}}>{entry.description}</span></div>
-                            <ul>
-                                {
-                                    entry.diagnosisCodes && entry.diagnosisCodes.map(code =>
-                                        <li key={code}>{code} {getDiagnoseName(code)}</li>
-                                    )
-                                }
-                            </ul>
-                        </div>
+                    patient.entries.map(entry =>
+                        <Card variant="outlined" key={entry.id}>
+                            <CardContent>
+                                <EntryDetails entry={entry} />
+                            </CardContent>
+                        </Card>
                     )
                 }
             </Box>

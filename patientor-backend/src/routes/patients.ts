@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import patientsService from '../services/patientsService';
-import { newPatientEntrySchema } from '../utils';
+import { newPatientEntrySchema, newEntrySchema } from '../utils';
 
 import { z } from "zod";
-import { NewPatient, Patient } from '../types';
+import { NewPatient, Patient, NewEntry, Entry } from '../types';
 
 const app = express();
 
@@ -22,6 +22,20 @@ router.get('/:id', (req, res) => {
   } else {
     res.sendStatus(404);
   }
+});
+
+const newEntryParser = (req: Request, _res: Response, next: NextFunction) => { 
+  try {
+    newEntrySchema.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+router.post('/:id/entries', newEntryParser, (req: Request<Record<string, unknown>, unknown, NewEntry>, res: Response<Entry>) => {
+  const addedEntry = patientsService.addEntry(req.params.id as string, req.body);
+  res.json(addedEntry);
 });
 
 const newPatientParser = (req: Request, _res: Response, next: NextFunction) => { 

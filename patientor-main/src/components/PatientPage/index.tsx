@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import patientService from "../../services/patients";
 import diagnoseService from "../../services/diagnosis";
 import { Patient, Diagnosis, Entry } from "../../types";
+import AddEntryForm from '../AddEntryForm';
 
 const PatientPage = () => {
     const [patient, setPatient] = useState<Patient>();
@@ -154,6 +155,7 @@ const PatientPage = () => {
                 </h2>
                 <div>ssh: {patient.ssn}</div>
                 <div>occupation: {patient.occupation}</div>
+                <AddEntryForm patient={patient} />
                 <h3>entries</h3>
                 {
                     patient.entries.map(entry =>

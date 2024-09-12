@@ -65,3 +65,5 @@ export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 export type NewPatient = Omit<Patient, 'id'>;
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+export type HealthCheckEntryFormValues = Omit<HealthCheckEntry, "id">;

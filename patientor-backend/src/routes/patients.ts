@@ -34,6 +34,7 @@ const newEntryParser = (req: Request, _res: Response, next: NextFunction) => {
 };
 
 router.post('/:id/entries', newEntryParser, (req: Request<Record<string, unknown>, unknown, NewEntry>, res: Response<Entry>) => {
+  console.log(req.params.id, req.body);
   const addedEntry = patientsService.addEntry(req.params.id as string, req.body);
   res.json(addedEntry);
 });

@@ -45,7 +45,7 @@ export interface HospitalEntry extends BaseEntry  {
   },
 }
 
-interface HealthCheckEntry extends BaseEntry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
@@ -62,7 +62,7 @@ export interface Patient {
   entries: Entry[];
 }
 
-export type NewPatient = z.infer<typeof newPatientEntrySchema>;
+export type NewPatient = z.infer<typeof newPatientEntrySchema>
 
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 

@@ -34,6 +34,14 @@ const PatientPage = () => {
         fetchDiagnosis();
     }, [id]);
 
+    const addEntry = (entry: Entry) => {
+        if (patient ) {
+            const updatedPatient = {...patient};
+            updatedPatient.entries.push(entry);
+            setPatient(updatedPatient);
+        }
+    };
+
 
     const getDiagnoseName = (code: string) => {
         const codeEntry = diagnosis.find(d => d.code === code);
@@ -155,7 +163,7 @@ const PatientPage = () => {
                 </h2>
                 <div>ssh: {patient.ssn}</div>
                 <div>occupation: {patient.occupation}</div>
-                <AddEntryForm patient={patient} />
+                <AddEntryForm patient={patient} handleEntry={addEntry}/>
                 <h3>entries</h3>
                 {
                     patient.entries.map(entry =>

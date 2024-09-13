@@ -1,4 +1,10 @@
 
+export interface Error {
+  code: string;
+  path: string;
+  message: string;
+}
+
 export interface Diagnosis {
   code: string;
   name: string;

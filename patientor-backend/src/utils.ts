@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Gender, NewPatient } from './types';
+import { Gender,NewPatient } from './types';
 
 
 export const newEntrySchema = z.object({
@@ -28,7 +28,7 @@ const newEntrySchemaHospital = newEntrySchema.extend({
     }),
 });
 
-const newEntrySchemaHealthCheck = newEntrySchema.extend({
+export const newEntrySchemaHealthCheck = newEntrySchema.extend({
     type: z.enum(['HealthCheck']),
     healthCheckRating: z.number(),
 });

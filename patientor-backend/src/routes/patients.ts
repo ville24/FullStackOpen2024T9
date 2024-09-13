@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import patientsService from '../services/patientsService';
-import { newPatientEntrySchema, newEntrySchemaHealthCheck } from '../utils';
+import { newPatientEntrySchema, newEntrySchemaParse } from '../utils';
 
 import { z } from "zod";
 import { v1 as uuid } from 'uuid';
@@ -32,7 +32,7 @@ const newEntryParser = (req: Request, _res: Response, next: NextFunction) => {
       id: id,
       ...req.body
     };
-    newEntrySchemaHealthCheck.parse(newEntryObject);
+    newEntrySchemaParse(newEntryObject);
     next();
   } catch (error: unknown) {
     next(error);

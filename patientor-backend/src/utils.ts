@@ -1,19 +1,19 @@
 import { z } from "zod";
 
-import { Gender,NewPatient } from './types';
+import { Gender, NewPatient, NewEntry, BaseEntry, HealthCheckRating } from './types';
 
 
-export const newEntrySchema = z.object({
+const newEntrySchema = z.object({
     id: z.string(),
-    description: z.string(),
-    date: z.string(),
-    specialist: z.string(),
+    description: z.string().min(1),
+    date: z.string().date(),
+    specialist: z.string().min(1),
     diagnosisCodes: z.array(z.string()).optional(),
 });
 
 const newEntrySchemaOccupationalHealthcare = newEntrySchema.extend({
     type: z.enum(['OccupationalHealthcare']),
-    employerName: z.string(),
+    employerName: z.string().min(1),
     sickLeave: z.object({
         startDate: z.string(),
         endDate: z.string(),
@@ -23,14 +23,14 @@ const newEntrySchemaOccupationalHealthcare = newEntrySchema.extend({
 const newEntrySchemaHospital = newEntrySchema.extend({
     type: z.enum(['Hospital']),
     discharge: z.object({
-        date: z.string(),
-        criteria: z.string(),
+        date: z.string().date(),
+        criteria: z.string().min(1),
     }),
 });
 
-export const newEntrySchemaHealthCheck = newEntrySchema.extend({
+const newEntrySchemaHealthCheck = newEntrySchema.extend({
     type: z.enum(['HealthCheck']),
-    healthCheckRating: z.number(),
+    healthCheckRating: z.nativeEnum(HealthCheckRating),
 });
 
 export const newPatientEntrySchema = z.object({
@@ -45,3 +45,16 @@ export const newPatientEntrySchema = z.object({
 export const toNewPatientEntry = (object: unknown): NewPatient => {
     return newPatientEntrySchema.parse(object);
 };
+
+export const newEntrySchemaParse = (object: any): NewEntry | BaseEntry  => {
+    switch (object.type) {
+        case 'OccupationalHealthcare':
+            return newEntrySchemaOccupationalHealthcare.parse(object);
+        case 'Hospital':
+            return newEntrySchemaHospital.parse(object);
+        case 'HealthCheck':
+            return newEntrySchemaHealthCheck.parse(object);
+        default:
+            return newEntrySchema.extend({type: z.enum(['OccupationalHealthcare', 'Hospital', 'HealthCheck'])}).parse(object);
+    }
+}

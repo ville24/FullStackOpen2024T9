@@ -8,11 +8,6 @@ const getEntries = (): Diagnosis[] => {
     return diagnosis;
 };
 
-/*const addDiary = () => {
-  return null;
-};*/
-
 export default {
-    getEntries,
-    //addDiary
+    getEntries
 };

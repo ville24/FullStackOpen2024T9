@@ -24,7 +24,7 @@ const Part = (props: PartProps)  => {
       return (
         <p>
           <span style={{fontWeight: "bold"}}>{props.coursePart.name} {props.coursePart.exerciseCount}</span><br />
-          <span>{props.coursePart.groupProjectCount}</span><br />
+          <span>Group projects {props.coursePart.groupProjectCount}</span><br />
         </p>
       );
 
@@ -33,7 +33,7 @@ const Part = (props: PartProps)  => {
         <p>
           <span style={{fontWeight: "bold"}}>{props.coursePart.name} {props.coursePart.exerciseCount}</span><br />
           <span style={{fontStyle: "italic"}}>{props.coursePart.description}</span><br />
-          <span>{props.coursePart.backgroundMaterial}</span><br />
+          <span>Background material: {props.coursePart.backgroundMaterial}</span><br />
         </p>
       );
 
@@ -42,7 +42,7 @@ const Part = (props: PartProps)  => {
         <p>
           <span style={{fontWeight: "bold"}}>{props.coursePart.name} {props.coursePart.exerciseCount}</span><br />
           <span style={{fontStyle: "italic"}}>{props.coursePart.description}</span><br />
-          <span>{props.coursePart.requirements.map((req, index) => {
+          <span>Required skills: {props.coursePart.requirements.map((req, index) => {
             if (index) return (<span key={req}>, {req}</span>); else return (<span key={req}>{req}</span>);
           })}</span><br />
         </p>

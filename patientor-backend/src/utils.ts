@@ -46,8 +46,8 @@ export const toNewPatientEntry = (object: unknown): NewPatient => {
     return newPatientEntrySchema.parse(object);
 };
 
-export const newEntrySchemaParse = (object: any): NewEntry | BaseEntry  => {
-    switch (object.type) {
+export const newEntrySchemaParse = (object: unknown): NewEntry | BaseEntry  => {
+    switch ((object as NewEntry).type) {
         case 'OccupationalHealthcare':
             return newEntrySchemaOccupationalHealthcare.parse(object);
         case 'Hospital':
@@ -57,4 +57,4 @@ export const newEntrySchemaParse = (object: any): NewEntry | BaseEntry  => {
         default:
             return newEntrySchema.extend({type: z.enum(['OccupationalHealthcare', 'Hospital', 'HealthCheck'])}).parse(object);
     }
-}
+};

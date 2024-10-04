@@ -12,8 +12,8 @@ app.get('/hello', (_req, res) => {
 });
 
 app.get('/bmi', (req, res) => {
-  const weight: number = Number(req.query.weight);
-  const height: number = Number(req.query.height);
+  const weight: string = String(req.query.weight);
+  const height: string = String(req.query.height);
   res.send(calcBmi({ weight: weight, height: height }));
 });
 

@@ -7,7 +7,14 @@ const uuid_1 = require("uuid");
 const patients_1 = __importDefault(require("../../data/patients"));
 const patients = patients_1.default;
 const getEntries = () => {
-    return patients;
+    return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
+        id,
+        name,
+        dateOfBirth,
+        gender,
+        occupation,
+        entries
+    }));
 };
 const getNonSensitiveEntries = () => {
     return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
@@ -20,12 +27,27 @@ const getNonSensitiveEntries = () => {
 };
 const addPatient = (entry) => {
     const id = (0, uuid_1.v1)();
-    const newPatientEntry = Object.assign({ id: id }, entry);
-    patients.push(newPatientEntry);
-    return newPatientEntry;
+    const newPatient = Object.assign({ id: id }, entry);
+    patients.push(newPatient);
+    return newPatient;
+};
+const addEntry = (patientId, entry) => {
+    const patient = findById(patientId);
+    const entryId = (0, uuid_1.v1)();
+    const newEntry = Object.assign({ id: entryId }, entry);
+    if (patient) {
+        patient.entries.push(newEntry);
+    }
+    return newEntry;
+};
+const findById = (id) => {
+    const entry = patients.find(d => d.id === id);
+    return entry;
 };
 exports.default = {
     getEntries,
     getNonSensitiveEntries,
-    addPatient
+    addPatient,
+    addEntry,
+    findById
 };

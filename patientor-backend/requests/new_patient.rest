@@ -1,4 +1,4 @@
-POST https://improved-palm-tree-556jgvjrq9ph7ppv-3000.app.github.dev/api/patients
+POST http://localhost:3000/api/patients
 Content-Type: application/json
 
 {

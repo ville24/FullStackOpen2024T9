@@ -19,7 +19,7 @@ const App = () => {
   const subHeader = "Diary entries";
 
   useEffect(() => {
-    axios.get<DiaryEntry[]>('https://improved-palm-tree-556jgvjrq9ph7ppv-3000.app.github.dev/api/diaries').then(response => {
+    axios.get<DiaryEntry[]>('http://localhost:3000/api/diaries').then(response => {
       setDiaryEntries(response.data);
     })
   }, [])
@@ -27,7 +27,7 @@ const App = () => {
   const entryCreation = async (newEntry: DiaryEntry): Promise<void> => {
     setErrorMessage('')
     try {
-      const response = await axios.post<DiaryEntry>('https://improved-palm-tree-556jgvjrq9ph7ppv-3000.app.github.dev/api/diaries', newEntry)
+      const response = await axios.post<DiaryEntry>('http://localhost:3000/api/diaries', newEntry)
       setDiaryEntries(diaryEntries.concat(response.data));
     }
     catch(error) {

@@ -1,6 +1,10 @@
 import { isNotNumber } from "./utils";
 
 interface BmiValues {
+    weight: string;
+    height: string;
+}
+interface BmiValuesParsed {
     weight: number;
     height: number;
 }
@@ -14,9 +18,9 @@ interface Error {
     error: string;
 }
   
-const parseArguments = (params: BmiValues): BmiValues => {
-    if (!params.height) throw new Error('Parameter height missing');
-    if (!params.weight) throw new Error('Parameter weight missing');
+const parseArguments = (params: BmiValues): BmiValuesParsed => {
+    if (params.height === 'undefined') throw new Error('Parameter height missing');
+    if (params.weight === 'undefined') throw new Error('Parameter weight missing');
 
     if (!isNotNumber(params.height) && !isNotNumber(params.weight)) {
         if (Number(params.height) === 0) throw new Error('Division by zero');
@@ -35,31 +39,24 @@ const calculateBmi = (weight: number, height: number): string => {
     switch (true) {
         case bmi < 16:
             return 'Underweight (Severe thinness)';
-            break;
 
         case bmi < 17:
             return 'Underweight (Moderate thinness)';
-            break;
         
         case bmi < 18.5:
             return 'Underweight (Mild thinness)';
-            break;
 
         case bmi < 25:
             return 'Normal (healthy weight)';
-            break;
 
         case bmi < 30:
             return 'Overweight (Pre-obese)';
-            break;
 
         case bmi < 35:
             return 'Obese (Class I)';
-            break;
 
         case bmi < 40:
             return 'Obese (Class II)';
-            break;
 
         default:
             return 'Obese (Class III) ';

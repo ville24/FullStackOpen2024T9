@@ -30,7 +30,7 @@ const newEntryParser = (req: Request, _res: Response, next: NextFunction) => {
     const id: string = uuid();
     const newEntryObject = {
       id: id,
-      ...req.body
+      ...req.body as NewEntry
     };
     newEntrySchemaParse(newEntryObject);
     next();
